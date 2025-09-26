@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Availability</title>
+  <style>
+    /* === Global Styles === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f8f9fa;
+      color: #333;
+    }
+
+    header {
+      background: #d9534f;
+      color: #fff;
+      padding: 15px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+    }
+
+    /* === Search Section === */
+    .search-section {
+      background: #fff;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .search-section select,
+    .search-section input,
+    .search-section button {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .search-section button {
+      background: #d9534f;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .search-section button:hover {
+      background: #c9302c;
+    }
+
+    /* === Cards Section === */
+    .cards-section {
+      max-width: 1100px;
+      margin: 30px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 0 15px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 15px;
+    }
+
+    .card-content h3 {
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+      color: #d9534f;
+    }
+
+    .card-content p {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .btn-request {
+      display: inline-block;
+      background: #5cb85c;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+    }
+
+    .btn-request:hover {
+      background: #4cae4c;
+    }
+
+    /* === Table Section === */
+    .availability {
+      max-width: 900px;
+      margin: 30px auto;
+      background: #fff;
+      border-radius: 8px;
+      overflow-x: auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #d9534f;
+      color: #fff;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:hover {
+      background: #f1f1f1;
+    }
+
+    /* === Responsive === */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.4rem;
+      }
+      th, td {
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Blood Availability Portal</h1>
+  </header>
+
+  <section class="search-section">
+    <select>
+      <option value="">Select Blood Group</option>
+      <option>A+</option>
+      <option>A-</option>
+      <option>B+</option>
+      <option>B-</option>
+      <option>O+</option>
+      <option>O-</option>
+      <option>AB+</option>
+      <option>AB-</option>
+    </select>
+
+    <input type="text" placeholder="Enter Location">
+    <button>Search</button>
+  </section>
+
+  <!-- === Cards with Images === -->
+  <section class="cards-section">
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1582719478146-d993c6b23c8a" alt="Blood Bank">
+      <div class="card-content">
+        <h3>City Hospital Blood Bank</h3>
+        <p>Location: Hyderabad</p>
+        <p>A+ Units: 12</p>
+        <a href="#" class="btn-request">Request</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1606209442398-3bfc3b1f7d9a" alt="Blood Bank">
+      <div class="card-content">
+        <h3>Red Cross Blood Bank</h3>
+        <p>Location: Chennai</p>
+        <p>O- Units: 8</p>
+        <a href="#" class="btn-request">Request</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1584467735815-e010d8dcbb16" alt="Blood Bank">
+      <div class="card-content">
+        <h3>Life Savers Blood Bank</h3>
+        <p>Location: Mumbai</p>
+        <p>B+ Units: 15</p>
+        <a href="#" class="btn-request">Request</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- === Table as before === -->
+  <section class="availability">
+    <table>
+      <thead>
+        <tr>
+          <th>Blood Bank</th>
+          <th>Location</th>
+          <th>Blood Group</th>
+          <th>Units Available</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>City Hospital Blood Bank</td>
+          <td>Hyderabad</td>
+          <td>A+</td>
+          <td>12</td>
+          <td><a href="#" class="btn-request">Request</a></td>
+        </tr>
+        <tr>
+          <td>Red Cross Blood Bank</td>
+          <td>Chennai</td>
+          <td>O-</td>
+          <td>8</td>
+          <td><a href="#" class="btn-request">Request</a></td>
+        </tr>
+        <tr>
+          <td>Life Savers Blood Bank</td>
+          <td>Mumbai</td>
+          <td>B+</td>
+          <td>15</td>
+          <td><a href="#" class="btn-request">Request</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</body>
+</html>
