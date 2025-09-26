@@ -58,6 +58,34 @@
     .search-section button:hover {
       background: #c9302c;
     }
+    /* === Theme Variables === */
+:root {
+  --bg: #f8f9fa;
+  --text: #333333;
+  --surface: #ffffff;
+  --primary: #d9534f;
+  --primary-contrast: #ffffff;
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] {
+  --bg: #0f1115;
+  --text: #e6e6e6;
+  --surface: #121317;
+  --primary: #c94b4b;
+  --primary-contrast: #ffffff;
+}
+
+/* Make body & header use variables */
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+header {
+  background: var(--primary);
+  color: var(--primary-contrast);
+}
+
 
     /* === Cards Section === */
     .cards-section {
@@ -162,6 +190,7 @@
 
   <header>
     <h1>Blood Availability Portal</h1>
+    <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
   </header>
 
   <section class="search-section">
@@ -251,6 +280,32 @@
       </tbody>
     </table>
   </section>
+  <script>
+  const root = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggle');
+
+  // Apply saved theme on load
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    root.setAttribute('data-theme', 'dark');
+    toggleBtn.textContent = '☀️ Light';
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      root.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'light');
+      toggleBtn.textContent = '🌙 Dark';
+    } else {
+      root.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      toggleBtn.textContent = '☀️ Light';
+    }
+  });
+</script>
+
 
 </body>
 </html>
+
