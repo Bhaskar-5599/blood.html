@@ -13,14 +13,47 @@
       font-family: Arial, sans-serif;
     }
 
+    /* === Theme Variables === */
+    :root {
+      --bg: #f8f9fa;
+      --text: #333333;
+      --surface: #ffffff;
+      --primary: #d9534f;
+      --primary-contrast: #ffffff;
+    }
+
+    /* Dark theme overrides */
+    [data-theme="dark"] {
+      --bg: #0f1115;
+      --text: #e6e6e6;
+      --surface: #121317;
+      --primary: #c94b4b;
+      --primary-contrast: #ffffff;
+    }
+
+    /* Body & Header use variables */
     body {
-      background: #f8f9fa;
-      color: #333;
+      background: linear-gradient(-45deg, #f8f9fa, #d9534f, #f8f9fa, #c94b4b);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: var(--text);
+    }
+
+    [data-theme="dark"] body {
+      background: linear-gradient(-45deg, #0f1115, #c94b4b, #121317, #d9534f);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
     }
 
     header {
-      background: #d9534f;
-      color: #fff;
+      background: var(--primary);
+      color: var(--primary-contrast);
       padding: 15px 20px;
       text-align: center;
     }
@@ -31,7 +64,7 @@
 
     /* === Search Section === */
     .search-section {
-      background: #fff;
+      background: var(--surface);
       padding: 20px;
       display: flex;
       flex-wrap: wrap;
@@ -49,8 +82,8 @@
     }
 
     .search-section button {
-      background: #d9534f;
-      color: #fff;
+      background: var(--primary);
+      color: var(--primary-contrast);
       cursor: pointer;
       transition: background 0.3s ease;
     }
@@ -58,34 +91,6 @@
     .search-section button:hover {
       background: #c9302c;
     }
-    /* === Theme Variables === */
-:root {
-  --bg: #f8f9fa;
-  --text: #333333;
-  --surface: #ffffff;
-  --primary: #d9534f;
-  --primary-contrast: #ffffff;
-}
-
-/* Dark theme overrides */
-[data-theme="dark"] {
-  --bg: #0f1115;
-  --text: #e6e6e6;
-  --surface: #121317;
-  --primary: #c94b4b;
-  --primary-contrast: #ffffff;
-}
-
-/* Make body & header use variables */
-body {
-  background: var(--bg);
-  color: var(--text);
-}
-header {
-  background: var(--primary);
-  color: var(--primary-contrast);
-}
-
 
     /* === Cards Section === */
     .cards-section {
@@ -98,7 +103,7 @@ header {
     }
 
     .card {
-      background: #fff;
+      background: var(--surface);
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -122,7 +127,7 @@ header {
     .card-content h3 {
       font-size: 1.1rem;
       margin-bottom: 5px;
-      color: #d9534f;
+      color: var(--primary);
     }
 
     .card-content p {
@@ -149,7 +154,7 @@ header {
     .availability {
       max-width: 900px;
       margin: 30px auto;
-      background: #fff;
+      background: var(--surface);
       border-radius: 8px;
       overflow-x: auto;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -161,8 +166,8 @@ header {
     }
 
     thead {
-      background: #d9534f;
-      color: #fff;
+      background: var(--primary);
+      color: var(--primary-contrast);
     }
 
     th, td {
@@ -210,7 +215,6 @@ header {
     <button>Search</button>
   </section>
 
-  <!-- === Cards with Images === -->
   <section class="cards-section">
     <div class="card">
       <img src="https://images.unsplash.com/photo-1582719478146-d993c6b23c8a" alt="Blood Bank">
@@ -243,7 +247,6 @@ header {
     </div>
   </section>
 
-  <!-- === Table as before === -->
   <section class="availability">
     <table>
       <thead>
@@ -280,32 +283,31 @@ header {
       </tbody>
     </table>
   </section>
+
   <script>
-  const root = document.documentElement;
-  const toggleBtn = document.getElementById('themeToggle');
+    const root = document.documentElement;
+    const toggleBtn = document.getElementById('themeToggle');
 
-  // Apply saved theme on load
-  const saved = localStorage.getItem('theme');
-  if (saved === 'dark') {
-    root.setAttribute('data-theme', 'dark');
-    toggleBtn.textContent = '☀️ Light';
-  }
-
-  toggleBtn.addEventListener('click', () => {
-    const isDark = root.getAttribute('data-theme') === 'dark';
-    if (isDark) {
-      root.removeAttribute('data-theme');
-      localStorage.setItem('theme', 'light');
-      toggleBtn.textContent = '🌙 Dark';
-    } else {
+    // Apply saved theme on load
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
       root.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-      toggleBtn.textContent = '☀️ Light';
+      toggleBtn.textContent = '☀ Light';
     }
-  });
-</script>
 
+    toggleBtn.addEventListener('click', () => {
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        root.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        toggleBtn.textContent = '🌙 Dark';
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        toggleBtn.textContent = '☀ Light';
+      }
+    });
+  </script>
 
 </body>
 </html>
-
