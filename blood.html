@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blood Availability</title>
   <style>
-    /* === Global Styles === */
     * {
       margin: 0;
       padding: 0;
@@ -13,25 +12,24 @@
       font-family: Arial, sans-serif;
     }
 
-    /* === Theme Variables === */
     :root {
       --bg: #f8f9fa;
       --text: #333333;
       --surface: #ffffff;
       --primary: #d9534f;
       --primary-contrast: #ffffff;
+      --table-hover: #f1f1f1;
     }
 
-    /* Dark theme overrides */
     [data-theme="dark"] {
       --bg: #0f1115;
       --text: #e6e6e6;
-      --surface: #121317;
+      --surface: #1e1f24;
       --primary: #c94b4b;
       --primary-contrast: #ffffff;
+      --table-hover: #2c2f36;
     }
 
-    /* Body & Header use variables */
     body {
       background: linear-gradient(-45deg, #f8f9fa, #d9534f, #f8f9fa, #c94b4b);
       background-size: 400% 400%;
@@ -56,13 +54,32 @@
       color: var(--primary-contrast);
       padding: 15px 20px;
       text-align: center;
+      position: relative;
     }
 
     header h1 {
       font-size: 1.8rem;
     }
 
-    /* === Search Section === */
+    .theme-toggle {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: var(--primary-contrast);
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #languageSelect {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      padding: 5px;
+      border-radius: 5px;
+    }
+
     .search-section {
       background: var(--surface);
       padding: 20px;
@@ -73,12 +90,23 @@
       border-bottom: 1px solid #ddd;
     }
 
+    [data-theme="dark"] .search-section {
+      border-bottom: 1px solid #333;
+    }
+
     .search-section select,
     .search-section input,
     .search-section button {
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
+    }
+
+    [data-theme="dark"] .search-section select,
+    [data-theme="dark"] .search-section input {
+      background: #2c2f36;
+      border: 1px solid #555;
+      color: var(--text);
     }
 
     .search-section button {
@@ -92,7 +120,6 @@
       background: #c9302c;
     }
 
-    /* === Cards Section === */
     .cards-section {
       max-width: 1100px;
       margin: 30px auto;
@@ -108,6 +135,10 @@
       overflow: hidden;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       transition: transform 0.3s ease;
+    }
+
+    [data-theme="dark"] .card {
+      box-shadow: 0 2px 6px rgba(255,255,255,0.05);
     }
 
     .card:hover {
@@ -133,6 +164,7 @@
     .card-content p {
       font-size: 0.9rem;
       margin-bottom: 8px;
+      color: var(--text);
     }
 
     .btn-request {
@@ -150,7 +182,6 @@
       background: #4cae4c;
     }
 
-    /* === Table Section === */
     .availability {
       max-width: 900px;
       margin: 30px auto;
@@ -160,9 +191,14 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
+    [data-theme="dark"] .availability {
+      box-shadow: 0 2px 6px rgba(255,255,255,0.05);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
+      color: var(--text);
     }
 
     thead {
@@ -176,11 +212,23 @@
       border-bottom: 1px solid #ddd;
     }
 
-    tbody tr:hover {
-      background: #f1f1f1;
+    [data-theme="dark"] th, [data-theme="dark"] td {
+      border-bottom: 1px solid #333;
     }
 
-    /* === Responsive === */
+    tbody tr:hover {
+      background: var(--table-hover);
+    }
+
+    td img.thumb {
+      width: 30px;
+      height: 30px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
     @media (max-width: 600px) {
       header h1 {
         font-size: 1.4rem;
@@ -188,18 +236,30 @@
       th, td {
         padding: 8px 10px;
       }
+      .search-section {
+        flex-direction: column;
+        align-items: stretch;
+      }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Blood Availability Portal</h1>
+    <h1 id="title">Blood Availability Portal</h1>
+    <select id="languageSelect">
+      <option value="en">English</option>
+      <option value="te">తెలుగు</option>
+      <option value="hi">हिन्दी</option>
+      <option value="ta">தமிழ்</option>
+      <option value="kn">ಕನ್ನಡ</option>
+      <option value="ja">日本語</option>
+    </select>
     <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
   </header>
 
   <section class="search-section">
-    <select>
+    <select id="bloodGroupSelect">
       <option value="">Select Blood Group</option>
       <option>A+</option>
       <option>A-</option>
@@ -211,13 +271,13 @@
       <option>AB-</option>
     </select>
 
-    <input type="text" placeholder="Enter Location">
-    <button>Search</button>
+    <input type="text" id="locationInput" placeholder="Enter Location">
+    <button id="searchBtn">Search</button>
   </section>
 
   <section class="cards-section">
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1582719478146-d993c6b23c8a" alt="Blood Bank">
+      <img src="1.png" alt="Blood Donation">
       <div class="card-content">
         <h3>City Hospital Blood Bank</h3>
         <p>Location: Hyderabad</p>
@@ -227,7 +287,7 @@
     </div>
 
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1606209442398-3bfc3b1f7d9a" alt="Blood Bank">
+      <img src="2.jpeg" alt="Blood Bank Building">
       <div class="card-content">
         <h3>Red Cross Blood Bank</h3>
         <p>Location: Chennai</p>
@@ -237,11 +297,61 @@
     </div>
 
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1584467735815-e010d8dcbb16" alt="Blood Bank">
+      <img src="3.jpeg" alt="Blood Donation Process">
       <div class="card-content">
         <h3>Life Savers Blood Bank</h3>
         <p>Location: Mumbai</p>
         <p>B+ Units: 15</p>
+        <a href="#" class="btn-request">Request</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="4.jpeg" alt="Blood Bag">
+      <div class="card-content">
+        <h3>Apollo Blood Bank</h3>
+        <p>Location: Delhi</p>
+        <p>AB+ Units: 20</p>
+        <a href="#" class="btn-request">Request</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="5.jpeg" alt="Blood Donation Awareness">
+      <div class="card-content">
+        <h3>Fortis Blood Bank</h3>
+        <p>Location: Kolkata</p>
+        <p>O+ Units: 5</p>
+        <a href="#" class="btn-request">Request</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="6.jpg" alt="Blood Drop Design">
+      <div class="card-content">
+        <h3>Manipal Blood Bank</h3>
+        <p>Location: Bangalore</p>
+        <p>A- Units: 3</p>
+        <a href="#" class="btn-request">Request</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="7.jpg" alt="Heart Blood Donation">
+      <div class="card-content">
+        <h3>AIIMS Blood Bank</h3>
+        <p>Location: Delhi</p>
+        <p>B- Units: 7</p>
+        <a href="#" class="btn-request">Request</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="8.png" alt="Medical Blood Symbol">
+      <div class="card-content">
+        <h3>CMC Blood Bank</h3>
+        <p>Location: Vellore</p>
+        <p>AB- Units: 4</p>
         <a href="#" class="btn-request">Request</a>
       </div>
     </div>
@@ -259,54 +369,144 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>City Hospital Blood Bank</td>
-          <td>Hyderabad</td>
-          <td>A+</td>
-          <td>12</td>
-          <td><a href="#" class="btn-request">Request</a></td>
-        </tr>
-        <tr>
-          <td>Red Cross Blood Bank</td>
-          <td>Chennai</td>
-          <td>O-</td>
-          <td>8</td>
-          <td><a href="#" class="btn-request">Request</a></td>
-        </tr>
-        <tr>
-          <td>Life Savers Blood Bank</td>
-          <td>Mumbai</td>
-          <td>B+</td>
-          <td>15</td>
-          <td><a href="#" class="btn-request">Request</a></td>
-        </tr>
+        <tr><td><img src="1.png" class="thumb"> City Hospital Blood Bank</td><td>Hyderabad</td><td>A+</td><td>12</td><td><a href="#" class="btn-request">Request</a></td></tr>
+        <tr><td><img src="2.jpeg" class="thumb"> Red Cross Blood Bank</td><td>Chennai</td><td>O-</td><td>8</td><td><a href="#" class="btn-request">Request</a></td></tr>
+        <tr><td><img src="3.jpeg" class="thumb"> Life Savers Blood Bank</td><td>Mumbai</td><td>B+</td><td>15</td><td><a href="#" class="btn-request">Request</a></td></tr>
+        <tr><td><img src="4.jpeg" class="thumb"> Apollo Blood Bank</td><td>Delhi</td><td>AB+</td><td>20</td><td><a href="#" class="btn-request">Request</a></td></tr>
+        <tr><td><img src="5.jpeg" class="thumb"> Fortis Blood Bank</td><td>Kolkata</td><td>O+</td><td>5</td><td><a href="#" class="btn-request">Request</a></td></tr>
+        <tr><td><img src="6.jpg" class="thumb"> Manipal Blood Bank</td><td>Bangalore</td><td>A-</td><td>3</td><td><a href="#" class="btn-request">Request</a></td></tr>
+        <tr><td><img src="7.jpg" class="thumb"> AIIMS Blood Bank</td><td>Delhi</td><td>B-</td><td>7</td><td><a href="#" class="btn-request">Request</a></td></tr>
+        <tr><td><img src="8.png" class="thumb"> CMC Blood Bank</td><td>Vellore</td><td>AB-</td><td>4</td><td><a href="#" class="btn-request">Request</a></td></tr>
       </tbody>
     </table>
   </section>
 
   <script>
-    const root = document.documentElement;
-    const toggleBtn = document.getElementById('themeToggle');
-
-    // Apply saved theme on load
-    const saved = localStorage.getItem('theme');
-    if (saved === 'dark') {
-      root.setAttribute('data-theme', 'dark');
-      toggleBtn.textContent = '☀ Light';
-    }
-
-    toggleBtn.addEventListener('click', () => {
-      const isDark = root.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        root.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'light');
-        toggleBtn.textContent = '🌙 Dark';
-      } else {
-        root.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-        toggleBtn.textContent = '☀ Light';
+    // Wait for DOM so we don't try to access elements before they exist
+    document.addEventListener('DOMContentLoaded', () => {
+      // === Theme Toggle ===
+      const root = document.documentElement;
+      const toggleBtn = document.getElementById('themeToggle');
+      const savedTheme = localStorage.getItem('theme');
+      try {
+        if (savedTheme === 'dark') {
+          root.setAttribute('data-theme', 'dark');
+          if (toggleBtn) toggleBtn.textContent = '☀ Light';
+        }
+      } catch (e) {
+        console.warn('Theme restore failed', e);
       }
-    });
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          const isDark = root.getAttribute('data-theme') === 'dark';
+          if (isDark) {
+            root.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            toggleBtn.textContent = '🌙 Dark';
+          } else {
+            root.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            toggleBtn.textContent = '☀ Light';
+          }
+        });
+      }
+
+      // === Search Functionality ===
+      const searchBtn = document.getElementById('searchBtn');
+      const bloodSelect = document.getElementById('bloodGroupSelect');
+      const locationInput = document.getElementById('locationInput');
+      const cards = document.querySelectorAll('.cards-section .card');
+      const tableRows = document.querySelectorAll('.availability tbody tr');
+
+      function fuzzyMatch(source, query) {
+        if (!query) return true;
+        return source.toLowerCase().includes(query.toLowerCase());
+      }
+
+      function applyFilters() {
+        const selectedBlood = bloodSelect ? bloodSelect.value : '';
+        const locationQuery = locationInput ? locationInput.value.trim() : '';
+
+        if (cards && cards.length) {
+          cards.forEach(card => {
+            const p1 = card.querySelector('p:nth-of-type(1)');
+            const p2 = card.querySelector('p:nth-of-type(2)');
+            const locationInfo = p1 ? p1.textContent : '';
+            const bloodInfo = p2 ? p2.textContent : '';
+            const matchesBlood = !selectedBlood || (bloodInfo && bloodInfo.includes(selectedBlood));
+            const matchesLocation = fuzzyMatch(locationInfo, locationQuery);
+            card.style.display = (matchesBlood && matchesLocation) ? '' : 'none';
+          });
+        }
+
+        if (tableRows && tableRows.length) {
+          tableRows.forEach(row => {
+            const blood = row.cells[2] ? row.cells[2].textContent : '';
+            const location = row.cells[1] ? row.cells[1].textContent : '';
+            const matchesBlood = !selectedBlood || blood === selectedBlood;
+            const matchesLocation = fuzzyMatch(location, locationQuery);
+            row.style.display = (matchesBlood && matchesLocation) ? '' : 'none';
+          });
+        }
+      }
+
+      if (searchBtn) searchBtn.addEventListener('click', applyFilters);
+      if (bloodSelect) bloodSelect.addEventListener('change', applyFilters);
+      if (locationInput) locationInput.addEventListener('input', applyFilters);
+
+      // === Translations ===
+      const translations = {
+        en: {title: "Blood Availability Portal", selectBlood: "Select Blood Group", enterLocation: "Enter Location", search: "Search", request: "Request", bloodBank: "Blood Bank", location: "Location", bloodGroup: "Blood Group", units: "Units Available", action: "Action"},
+        te: {title: "రక్తం లభ్యత పోర్టల్", selectBlood: "రక్త గ్రూప్ ఎంచుకోండి", enterLocation: "ప్రాంతం ఇవ్వండి", search: "వెతకండి", request: "అభ్యర్థించండి", bloodBank: "రక్త బ్యాంక్", location: "ప్రాంతం", bloodGroup: "రక్త గ్రూప్", units: "యూనిట్లు లభ్యం", action: "చర్య"},
+        hi: {title: "रक्त उपलब्धता पोर्टल", selectBlood: "ब्लड ग्रुप चुनें", enterLocation: "स्थान दर्ज करें", search: "खोजें", request: "अनुरोध करें", bloodBank: "रक्त बैंक", location: "स्थान", bloodGroup: "ब्लड ग्रुप", units: "उपलब्ध यूनिट्स", action: "कार्य"},
+        ta: {title: "இரத்தம் கிடைக்கும் போர்டல்", selectBlood: "இரத்த வகை தேர்ந்தெடுக்கவும்", enterLocation: "இடத்தை உள்ளிடவும்", search: "தேடவும்", request: "கோரிக்கை", bloodBank: "இரத்த வங்கி", location: "இடம்", bloodGroup: "இரத்த வகை", units: "அலகுகள் கிடைக்கும்", action: "நடவடிக்கை"},
+        kn: {title: "ರಕ್ತ ಲಭ್ಯತೆ ಪೋರ್ಟಲ್", selectBlood: "ರಕ್ತದ ಗುಂಪನ್ನು ಆಯ್ಕೆಮಾಡಿ", enterLocation: "ಸ್ಥಳ ನಮೂದಿಸಿ", search: "ಹುಡುಕಿ", request: "ವಿನಂತಿ", bloodBank: "ರಕ್ತ ಬ್ಯಾಂಕ್", location: "ಸ್ಥಳ", bloodGroup: "ರಕ್ತದ ಗುಂಪು", units: "ಲಭ್ಯವಿರುವ ಘಟಕಗಳು", action: "ಕ್ರಿಯೆ"},
+        ja: {title: "血液在庫ポータル", selectBlood: "血液型を選択", enterLocation: "場所を入力", search: "検索", request: "リクエスト", bloodBank: "血液バンク", location: "場所", bloodGroup: "血液型", units: "利用可能なユニット", action: "操作"}
+      };
+
+      const langSelect = document.getElementById("languageSelect");
+      const savedLang = localStorage.getItem('lang') || 'en';
+
+      function updateLanguage(lang) {
+        const t = translations[lang] || translations.en;
+        const titleEl = document.getElementById("title");
+        if (titleEl) titleEl.textContent = t.title;
+
+        const bgSelect = document.getElementById("bloodGroupSelect");
+        if (bgSelect && bgSelect.options && bgSelect.options[0]) bgSelect.options[0].textContent = t.selectBlood;
+
+        const locInput = document.getElementById("locationInput");
+        if (locInput) locInput.placeholder = t.enterLocation;
+
+        const sBtn = document.getElementById("searchBtn");
+        if (sBtn) sBtn.textContent = t.search;
+
+        document.querySelectorAll(".btn-request").forEach(btn => btn.textContent = t.request);
+
+        const th = document.querySelectorAll(".availability thead th");
+        if (th && th.length >= 5) {
+          th[0].textContent = t.bloodBank;
+          th[1].textContent = t.location;
+          th[2].textContent = t.bloodGroup;
+          th[3].textContent = t.units;
+          th[4].textContent = t.action;
+        }
+
+        localStorage.setItem('lang', lang);
+      }
+
+      if (langSelect) {
+        langSelect.addEventListener("change", (e) => updateLanguage(e.target.value));
+        // set default (either saved or en)
+        langSelect.value = savedLang;
+        updateLanguage(savedLang);
+      } else {
+        // fallback: update language to English if selector missing
+        updateLanguage('en');
+      }
+
+    }); // DOMContentLoaded
   </script>
 
 </body>
